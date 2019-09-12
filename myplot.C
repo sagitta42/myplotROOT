@@ -89,7 +89,7 @@ void Myplot::DrawHistos(){
 	if(Scale){
 		double nentries = histos[0]->Integral();
 		for(int i = 1; i < nhistos; i++){
-			int hentries = histos[i]->Integral();
+			double hentries = histos[i]->Integral();
 			histos[i]->Scale(nentries*1./hentries);
 		}
 	}
