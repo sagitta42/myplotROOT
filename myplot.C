@@ -87,7 +87,7 @@ Myplot::Myplot(string filename, bool scale){;
 void Myplot::DrawHistos(){
 	// scale histos to have the same number of entries as the first one (if scale is true)
 	if(Scale){
-		int nentries = histos[0]->Integral();
+		double nentries = histos[0]->Integral();
 		for(int i = 1; i < nhistos; i++){
 			int hentries = histos[i]->Integral();
 			histos[i]->Scale(nentries*1./hentries);
