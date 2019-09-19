@@ -96,7 +96,8 @@ void Myplot::DrawHistos(){
 	
 	cout << "~~~ Drawing" << endl;
 
-	int ww = 800; int hh = 600;
+	int ww = 1000; int hh = 700;
+//	int ww = 800; int hh = 600;
 
 	TLegend* leg;
 	double* xyrange = CommonHistoRange();
@@ -104,7 +105,7 @@ void Myplot::DrawHistos(){
 	// legend width and height depend on the number of histos and the length of their labels
 	float xedge = 0.9;
 	float yedge = 0.89;
-	leg = new TLegend(xedge - legwidth*0.025, yedge - 0.05*nhistos, xedge, yedge);
+	leg = new TLegend(xedge - legwidth*0.027, yedge - 0.06*nhistos, xedge, yedge);
 	leg->SetBorderSize(0);
 	// frame according to the common x and y ranges of all the histos
 //	cout << xmin << " " << xmax << endl;
@@ -118,20 +119,34 @@ void Myplot::DrawHistos(){
 	frame->GetYaxis()->SetLabelSize(0.045);
 
 	int linestyle = 0; // solid
-	int colour = 1; // black
+
+    // colours = choice from the given list
+    int colours[] = {kBlack, kBlue, kRed, kGreen+2, kCyan, kViolet+2, kMagenta, kOrange+7};
+    int num_cols = 8; // is there a reasonable way to get array length in C++ without vectors?..
+    int col_idx = 0;
 
 	for(int i = 0; i < nhistos; i++){
 		// draw
-		histos[i]->SetLineWidth(2.5);
+		histos[i]->SetLineWidth(3);
 		histos[i]->SetStats(0);
-		histos[i]->SetLineColor(colour);
-		histos[i]->SetLineStyle(linestyle % 2 + 1);
-		histos[i]->Draw("same");
+
+        histos[i]->SetLineColor(colours[col_idx % num_cols]);
+//		histos[i]->SetLineColor(col_idx + 1); // colours = 1, 2, 3 ...
+
+        col_idx++;
+        // i wanna skip 8, cause it's a green too similar to 3
+//        if(col_idx == 7) col_idx++;
+
+        histos[i]->SetLineStyle(1); // all solid
+//		histos[i]->SetLineStyle(6 * (linestyle % 2) + 1); // becomes 1 (solid) or 7 (dashed)
+//		histos[i]->SetLineStyle(linestyle % 2 + 1); // becomes 1 (solid) or 2 (dashed)
+//		linestyle++;
+		
+        histos[i]->Draw("HIST same"); // no error bars, just a "step" histogram
+//        histos[i]->Draw("same"); // if there are error bars, they will be visualized by default
 		cout << histos[i]->GetName() << endl;
 
 		leg->AddEntry(histos[i], histos[i]->GetTitle());
-		colour++;
-		linestyle++;
 	}
 
 	leg->Draw("same");
@@ -147,7 +162,12 @@ void Myplot::SaveCanvas(string outn){
 	TFile out(outname.c_str(), "recreate");
 	canvas->Write();
 	out.Close();
-	delete canvas;
+
+    // save as pdf
+    outname = outname + ".pdf";
+    canvas->SaveAs(outname.c_str());
+
+    delete canvas;
 }
 
 
