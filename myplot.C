@@ -15,7 +15,7 @@ class Myplot{
 		Myplot(string filename, bool scale=false); // read and store histos from given filename
 		Myplot(bool scale=false);
 		void DrawHistos();
-		void SaveCanvas(string outn="");
+		void SaveCanvas(string outn="", bool pdf=false);
 
 		void SetLabels(string xlabel, string ylabel); // custom given labels for x and y axis
 		void SetTitle(string title); // custom given title
@@ -118,7 +118,7 @@ void Myplot::DrawHistos(){
 	frame->GetXaxis()->SetLabelSize(0.045);
 	frame->GetYaxis()->SetLabelSize(0.045);
 
-	int linestyle = 0; // solid
+//	int linestyle = 0; // for changing linestyle
 
     // colours = choice from the given list
     int colours[] = {kBlack, kBlue, kRed, kGreen+2, kCyan, kViolet+2, kMagenta, kOrange+7};
@@ -130,7 +130,7 @@ void Myplot::DrawHistos(){
 		histos[i]->SetLineWidth(3);
 		histos[i]->SetStats(0);
 
-        histos[i]->SetLineColor(colours[col_idx % num_cols]);
+        histos[i]->SetLineColor(colours[col_idx % num_cols]); // colours from the list
 //		histos[i]->SetLineColor(col_idx + 1); // colours = 1, 2, 3 ...
 
         col_idx++;
@@ -155,7 +155,7 @@ void Myplot::DrawHistos(){
 }
 
 
-void Myplot::SaveCanvas(string outn){
+void Myplot::SaveCanvas(string outn, bool pdf){
 	// output file
 	string outname = outn.size() != 0 ? outn : fname + ".out";
 	cout << "~~~ Saving canvas to file " << outname << endl;
@@ -164,8 +164,10 @@ void Myplot::SaveCanvas(string outn){
 	out.Close();
 
     // save as pdf
-    outname = outname + ".pdf";
-    canvas->SaveAs(outname.c_str());
+    if(pdf){
+        outname = outname + ".pdf";
+        canvas->SaveAs(outname.c_str());
+    }
 
     delete canvas;
 }
