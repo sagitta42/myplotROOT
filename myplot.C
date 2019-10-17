@@ -12,8 +12,8 @@ using namespace std;
 
 class Myplot{
 	public:
-		Myplot(string filename, bool scale=false); // read and store histos from given filename
-		Myplot(bool scale=false);
+		Myplot(string filename, bool scale=false, bool yscale=true); // read and store histos from given filename
+		Myplot(bool scale=false, bool yscale=true);
 		void DrawHistos();
 		void SaveCanvas(string outn="", bool pdf=false);
 
@@ -37,25 +37,29 @@ class Myplot{
 		TH1* frame;
 		bool Scale;
 		float xmin, xmax;
+        bool Yscale;
 
 };
 
 		
-Myplot::Myplot(bool scale){
+Myplot::Myplot(bool scale, bool yscale){
 	nhistos = 0;
 	xmin = -111;
 	xmax = -111;
 	Scale = scale;
+    Yscale = yscale;
+	legwidth = 0; // width of the legend
 }; // no file provided, will add histos later
 
 
-Myplot::Myplot(string filename, bool scale){;
+Myplot::Myplot(string filename, bool scale, bool yscale){;
 //Myplot::Myplot(string filename){;
 
 	// file with the histos to draw
 	fname = filename;
 	f = TFile::Open(filename.c_str());
 	Scale = scale;
+    Yscale = yscale;
 
 	// extract histo names
 	TList* list = f->GetListOfKeys();
@@ -105,14 +109,17 @@ void Myplot::DrawHistos(){
 	// legend width and height depend on the number of histos and the length of their labels
 	float xedge = 0.9;
 	float yedge = 0.89;
-	leg = new TLegend(xedge - legwidth*0.027, yedge - 0.06*nhistos, xedge, yedge);
+    cout << "x1 = " << xedge - legwidth*0.02 << " y1 = " << yedge - 0.06*nhistos << " x2 = " << xedge << " y2 = " << yedge << endl;
+	leg = new TLegend(xedge - legwidth*0.015, yedge - 0.06*nhistos, xedge, yedge);
 	leg->SetBorderSize(0);
 	// frame according to the common x and y ranges of all the histos
 //	cout << xmin << " " << xmax << endl;
 	if(xmin == -111) xmin = xyrange[0]*0.9;
 	if(xmax == -111) xmax = xyrange[1]*1.1;
 //	cout << xmin << " " << xmax << endl;
+	cout << "Frame" << endl;
 	frame = canvas->DrawFrame(xmin, xyrange[2], xmax, xyrange[3]*1.2);
+	cout << "Frame done" << endl;
 //	frame = canvas->DrawFrame(xyrange[0]*0.9, xyrange[2], xyrange[1]*1.1, xyrange[3]*1.2);
 	frame->SetTitle("");
 	frame->GetXaxis()->SetLabelSize(0.045);
@@ -147,10 +154,11 @@ void Myplot::DrawHistos(){
 		cout << histos[i]->GetName() << endl;
 
 		leg->AddEntry(histos[i], histos[i]->GetTitle());
+//        cout << "legend: " << histos[i]->GetTitle() << endl;
 	}
 
 	leg->Draw("same");
-	canvas->SetLogy();
+	if(Yscale) canvas->SetLogy();
 
 }
 
@@ -191,8 +199,9 @@ double* Myplot::CommonHistoRange(){
 		if(xyhrange[3] > xyrange[3]) xyrange[3] = xyhrange[3];
 	}
 
-//	for(int i = 0; i < 4; i++) cout << xyrange[i] << " ";
-//	cout << endl;
+    cout << "XYrange" << endl;
+	for(int i = 0; i < 4; i++) cout << xyrange[i] << " ";
+	cout << endl;
 	
 	return xyrange;
 }
@@ -222,7 +231,7 @@ double* Myplot::HistoRange(int hindex){
 	}
 
 	// if we want log scale
-	if(xyhrange[2] == 0) xyhrange[2] = 0.1;
+	if(Yscale) if(xyhrange[2] == 0) xyhrange[2] = 1e-10;
 
 //	for(int i = 0; i < 4; i++) cout << xyhrange[i] << " ";
 //	cout << endl;
@@ -259,6 +268,7 @@ void Myplot::AddHisto(TH1D* h){
 	if(hlength > legwidth) legwidth = hlength; // adjust the width according to the longest label
 	nhistos++;
 	cout << "added histo: " << hname << endl;
+//    cout << "Legend width: " << legwidth << endl;
 }
 
 
