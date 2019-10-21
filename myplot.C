@@ -26,6 +26,7 @@ class Myplot{
 
 		TH1D* GetHisto(int i); // return histo
 		void AddHisto(TH1D* h); // add histo to our list
+        void AddHisto(string fname, string hname, string newname="");
 
 	private:
 		string fname; // name of the input file
@@ -269,6 +270,13 @@ void Myplot::AddHisto(TH1D* h){
 	nhistos++;
 	cout << "added histo: " << hname << endl;
 //    cout << "Legend width: " << legwidth << endl;
+}
+
+void Myplot::AddHisto(string flname, string hname, string newname){
+    TFile* fl = TFile::Open(flname.c_str());
+    TH1D* hi = (TH1D*) fl->Get(hname.c_str());
+    if(newname.compare("") != 0) hi->SetTitle(newname.c_str());
+    AddHisto(hi);
 }
 
 
