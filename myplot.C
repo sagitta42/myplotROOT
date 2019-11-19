@@ -7,6 +7,7 @@
 #include <iostream>
 #include "TLegend.h"
 #include "TCollection.h"
+#include "TLine.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ class Myplot{
 		Myplot(string filename, bool scale=false, bool yscale=true); // read and store histos from given filename
 		Myplot(bool scale=false, bool yscale=true);
 		void DrawHistos();
+        void DrawLines();
 		void SaveCanvas(string outn="", bool pdf=false);
 
 		void SetLabels(string xlabel, string ylabel); // custom given labels for x and y axis
@@ -27,12 +29,15 @@ class Myplot{
 		TH1D* GetHisto(int i); // return histo
 		void AddHisto(TH1D* h); // add histo to our list
         void AddHisto(string fname, string hname, string newname="");
+        void AddLine(TLine* line);
 
 	private:
 		string fname; // name of the input file
 		TFile* f;
 		TH1D* histos[20]; // store histos from the file
+        TLine* lines[5]; // lines to draw
 		int nhistos; // number of histos 
+        int nlines; // number of lines
 		int legwidth; // legend width: depends on the lengh of the labels (which are histo titles)
 		TCanvas* canvas;
 		TH1* frame;
@@ -45,6 +50,7 @@ class Myplot{
 		
 Myplot::Myplot(bool scale, bool yscale){
 	nhistos = 0;
+    nlines = 0;
 	xmin = -111;
 	xmax = -111;
 	Scale = scale;
@@ -110,6 +116,7 @@ void Myplot::DrawHistos(){
 	// legend width and height depend on the number of histos and the length of their labels
 	float xedge = 0.9;
 	float yedge = 0.89;
+    legwidth = legwidth*0.8; // too long
     cout << "x1 = " << xedge - legwidth*0.02 << " y1 = " << yedge - 0.06*nhistos << " x2 = " << xedge << " y2 = " << yedge << endl;
 	leg = new TLegend(xedge - legwidth*0.015, yedge - 0.06*nhistos, xedge, yedge);
 	leg->SetBorderSize(0);
@@ -150,8 +157,9 @@ void Myplot::DrawHistos(){
 //		histos[i]->SetLineStyle(linestyle % 2 + 1); // becomes 1 (solid) or 2 (dashed)
 //		linestyle++;
 		
-        histos[i]->Draw("HIST same"); // no error bars, just a "step" histogram
-//        histos[i]->Draw("same"); // if there are error bars, they will be visualized by default
+        histos[i]->Draw("E same"); // error bars
+//        histos[i]->Draw("HIST same"); // no error bars, just a "step" histogram
+//        histos[i]->Draw("same"); // if there are error bars, they will be visualized by default -> horizontal bars?
 		cout << histos[i]->GetName() << endl;
 
 		leg->AddEntry(histos[i], histos[i]->GetTitle());
@@ -163,6 +171,10 @@ void Myplot::DrawHistos(){
 
 }
 
+void Myplot::DrawLines(){
+	cout << "~~~ Drawing lines" << endl;
+    for(int i = 0; i < nlines; i++) lines[i]->Draw();
+}
 
 void Myplot::SaveCanvas(string outn, bool pdf){
 	// output file
@@ -232,7 +244,8 @@ double* Myplot::HistoRange(int hindex){
 	}
 
 	// if we want log scale
-	if(Yscale) if(xyhrange[2] == 0) xyhrange[2] = 1e-10;
+	if(Yscale) if(xyhrange[2] == 0) xyhrange[2] = 1e-1;
+//	if(Yscale) if(xyhrange[2] == 0) xyhrange[2] = 1e-10;
 
 //	for(int i = 0; i < 4; i++) cout << xyhrange[i] << " ";
 //	cout << endl;
@@ -283,4 +296,9 @@ void Myplot::AddHisto(string flname, string hname, string newname){
 void Myplot::SetXlim(float x1, float x2){
 	xmin = x1;
 	xmax = x2;
+}
+        
+void Myplot::AddLine(TLine* line){
+    lines[nlines] = line;
+    nlines++;
 }
