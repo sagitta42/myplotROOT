@@ -22,6 +22,7 @@ class Myplot{
 		void SetLabels(string xlabel, string ylabel); // custom given labels for x and y axis
 		void SetTitle(string title); // custom given title
 		void SetXlim(float x1, float x2);
+		void SetYlim(float y1, float y2);
 
 		double* HistoRange(int hindex);  // return min and max for x and y of given histo
 		double* CommonHistoRange(); // find common min and max for x and y for all histos to make a nice frame
@@ -43,6 +44,7 @@ class Myplot{
 		TH1* frame;
 		bool Scale;
 		float xmin, xmax;
+		float ymin, ymax;
         bool Yscale;
 
 };
@@ -53,6 +55,8 @@ Myplot::Myplot(bool scale, bool yscale){
     nlines = 0;
 	xmin = -111;
 	xmax = -111;
+	ymin = -111;
+	ymax = -111;
 	Scale = scale;
     Yscale = yscale;
 	legwidth = 0; // width of the legend
@@ -76,6 +80,8 @@ Myplot::Myplot(string filename, bool scale, bool yscale){;
 	legwidth = 0; // width of the legend
 	xmin = -111;
 	xmax = -111;
+	ymin = -111;
+	ymax = -111;
 
 	// store histos
 	cout << "~~~ Reading histograms from file " << filename << endl;
@@ -124,9 +130,11 @@ void Myplot::DrawHistos(){
 //	cout << xmin << " " << xmax << endl;
 	if(xmin == -111) xmin = xyrange[0]*0.9;
 	if(xmax == -111) xmax = xyrange[1]*1.1;
+	if(ymin == -111) ymin = xyrange[2]*0.9;
+	if(ymax == -111) ymax = xyrange[3]*1.2;
 //	cout << xmin << " " << xmax << endl;
 	cout << "Frame" << endl;
-	frame = canvas->DrawFrame(xmin, xyrange[2], xmax, xyrange[3]*1.2);
+	frame = canvas->DrawFrame(xmin, ymin, xmax, ymax);
 	cout << "Frame done" << endl;
 //	frame = canvas->DrawFrame(xyrange[0]*0.9, xyrange[2], xyrange[1]*1.1, xyrange[3]*1.2);
 	frame->SetTitle("");
@@ -296,6 +304,11 @@ void Myplot::AddHisto(string flname, string hname, string newname){
 void Myplot::SetXlim(float x1, float x2){
 	xmin = x1;
 	xmax = x2;
+}
+
+void Myplot::SetYlim(float y1, float y2){
+	ymin = y1;
+	ymax = y2;
 }
         
 void Myplot::AddLine(TLine* line){
