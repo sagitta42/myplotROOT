@@ -3,16 +3,25 @@
 int main(int argc, char* argv[]){
 	// input to the macro: name of the file with histograms to plot
 	string fname = argv[1];
-	// input: filename, scale histos by num entries or not
-	Myplot* p = new Myplot(fname.c_str(), true);
-	// optional: set x to be what you want; otherwise finds automatic x lim based on min and max of all histos (y is set automatically)
+    
+	// 1: filename (string)
+    // 2: scale histos to have the same integral (bool)
+    // 3: y axis log scale (bool)
+	Myplot* p = new Myplot(fname, false, true);
+	
+    // optional: set axes limits tp what you want
     // has to be set before drawing
-//    p->SetXlim(0, 100);
+    p->SetXlim(0, 100);
+    p->SetYlim(0, 2);
+    
+    // draw
 	p->DrawHistos();
-	// optional: set title to what you want
+	
+    // optional: set labels
 	p->SetTitle("Title");
-	// optional: set x and y labels
 	p->SetLabels("X text", "Y text");
-	// saves the canvas to filename.out if no output filename is provided; otherwise to the provided file (creates or overwrites existing one)
-	p->SaveCanvas();
+	
+    // save canvas to given file
+    // if not given, saves to <input file>.root.out
+	p->SaveCanvas("mystuff.root");
 }
