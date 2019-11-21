@@ -6,7 +6,9 @@ Plotting example: plot_test.C
 
 Compile via 
 
-``` g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`; ```
+```console
+g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`;
+```
 
 Tip: add shortcut to ```.bashrc```
 
@@ -66,8 +68,9 @@ And then add the histograms from the files, for example
 for( < loop over files ){
     TFile f(<name>);
     TH1D* h = (TH1D*) f->Get(<histo name>);
-    p->Add(h);
+    p->AddHisto(h);
 }
+```
 
 ### Draw
 
