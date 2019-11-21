@@ -14,7 +14,7 @@ Tip: add shortcut to ```.bashrc```
 
 ```bash
 compileit(){
-            g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`;
+    g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`;
 }
 ```
 
