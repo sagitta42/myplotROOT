@@ -20,10 +20,24 @@ compileit(){
 
 And use ```compileit plot_test.C``` to create ```./plot_test```
 
+## Example usage
 
-## Examples of what it can do
+File ```plot_test.C```:
 
-### Histograms in one ROOT files
+```c++
+int main(){
+    Myplot* p = new Myplot("test.root", false, true); 
+
+    p->DrawHistos();
+    
+    p->SetLabels("nhits", "");
+    p->SaveCanvas("test_plot.root", true);
+}
+```
+
+Go to the bottom for example output of running ```./plot_test```
+
+## Histograms in one ROOT files
 
 Say you collect several histograms that you want to plot in one root file called ```test.root```
 
@@ -53,7 +67,7 @@ E.g.
 Myplot* p = new Myplot("test.root", false, true);
 ```
 
-### Histograms in separate files
+## Histograms in separate files
 
 If you want to read the histograms from different files, you can initiate an empty plot
 
@@ -72,7 +86,7 @@ for( < loop over files ){
 }
 ```
 
-### Draw
+## Draw
 
 To draw the histograms, do
 
@@ -91,7 +105,7 @@ p->SetLabels("x label", "y label");
 p->SetTitle("title");
 ```
 
-### Save plot
+## Save plot
 
 To save the plot, use the function ```p->SaveCanvas()```.
 
@@ -99,22 +113,22 @@ If you drew from one file, and don't pass any arguments to this function, it wil
 
 If you added histos manually from many files, or want a different name, you can pass it to the function. Also, if you want to save a PDF of the plot, you can set the corresponding bool to true (which is false by default):
 
-```c+++
+```c++
 p->SaveCanvas("name.root", true);
 ```
 
-### Drawing lines
+## Drawing lines
 
 If you want to draw lines on the plot, you can do it via:
 
 ```c++
 TLine* line = new TLine(...);
-p->Add(line);
+p->AddLine(line);
 p->DrawLines();
 ```
 
 
-### Example
+## Example
 
 1. Compile ```plot_test.C``` as described above
 
