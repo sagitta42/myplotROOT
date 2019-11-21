@@ -122,8 +122,8 @@ void Myplot::DrawHistos(){
 	// legend width and height depend on the number of histos and the length of their labels
 	float xedge = 0.9;
 	float yedge = 0.89;
-    legwidth = legwidth*0.8; // too long
-    cout << "x1 = " << xedge - legwidth*0.02 << " y1 = " << yedge - 0.06*nhistos << " x2 = " << xedge << " y2 = " << yedge << endl;
+    legwidth = legwidth; // too long
+//    cout << "x1 = " << xedge - legwidth*0.02 << " y1 = " << yedge - 0.06*nhistos << " x2 = " << xedge << " y2 = " << yedge << endl;
 	leg = new TLegend(xedge - legwidth*0.015, yedge - 0.06*nhistos, xedge, yedge);
 	leg->SetBorderSize(0);
 	// frame according to the common x and y ranges of all the histos
@@ -133,10 +133,7 @@ void Myplot::DrawHistos(){
 	if(ymin == -111) ymin = xyrange[2]*0.9;
 	if(ymax == -111) ymax = xyrange[3]*1.2;
 //	cout << xmin << " " << xmax << endl;
-	cout << "Frame" << endl;
 	frame = canvas->DrawFrame(xmin, ymin, xmax, ymax);
-	cout << "Frame done" << endl;
-//	frame = canvas->DrawFrame(xyrange[0]*0.9, xyrange[2], xyrange[1]*1.1, xyrange[3]*1.2);
 	frame->SetTitle("");
 	frame->GetXaxis()->SetLabelSize(0.045);
 	frame->GetYaxis()->SetLabelSize(0.045);
@@ -165,13 +162,13 @@ void Myplot::DrawHistos(){
 //		histos[i]->SetLineStyle(linestyle % 2 + 1); // becomes 1 (solid) or 2 (dashed)
 //		linestyle++;
 		
-        histos[i]->Draw("E same"); // error bars
-//        histos[i]->Draw("HIST same"); // no error bars, just a "step" histogram
+//        histos[i]->Draw("E same"); // error bars
+        histos[i]->Draw("HIST same"); // no error bars, just a "step" histogram
 //        histos[i]->Draw("same"); // if there are error bars, they will be visualized by default -> horizontal bars?
-		cout << histos[i]->GetName() << endl;
+	
+        cout << histos[i]->GetName() << endl;
 
 		leg->AddEntry(histos[i], histos[i]->GetTitle());
-//        cout << "legend: " << histos[i]->GetTitle() << endl;
 	}
 
 	leg->Draw("same");
@@ -220,9 +217,9 @@ double* Myplot::CommonHistoRange(){
 		if(xyhrange[3] > xyrange[3]) xyrange[3] = xyhrange[3];
 	}
 
-    cout << "XYrange" << endl;
-	for(int i = 0; i < 4; i++) cout << xyrange[i] << " ";
-	cout << endl;
+//    cout << "XYrange" << endl;
+//	for(int i = 0; i < 4; i++) cout << xyrange[i] << " ";
+//	cout << endl;
 	
 	return xyrange;
 }
@@ -290,7 +287,6 @@ void Myplot::AddHisto(TH1D* h){
 	if(hlength > legwidth) legwidth = hlength; // adjust the width according to the longest label
 	nhistos++;
 	cout << "added histo: " << hname << endl;
-//    cout << "Legend width: " << legwidth << endl;
 }
 
 void Myplot::AddHisto(string flname, string hname, string newname){

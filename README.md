@@ -2,11 +2,21 @@
 
 Class: myplot.C
 
-Plotting example: plot.C
+Plotting example: plot_test.C
 
 Compile via 
 
 ``` g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`; ```
+
+Tip: add shortcut to ```.bashrc```
+
+```bash
+compileit(){
+            g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`;
+}
+```
+
+And use ```compileit plot_test.C``` to create ```./plot_test```
 
 
 ## Examples of what it can do
@@ -98,4 +108,30 @@ If you want to draw lines on the plot, you can do it via:
 TLine* line = new TLine(...);
 p->Add(line);
 p->DrawLines();
+```
+
+
+### Example
+
+1. Compile ```plot_test.C``` as described above
+
+2. Run ```./plot_test```
+
+```console
+$ ./plot_test 
+~~ Reading histograms from file test.root
+c14_nhits
+be7_nhits
+po210_nhits
+~~ Drawing
+XYrange
+10.5 370.5 0.1 0.0264498 
+x1 = 0.68 y1 = 0.71 x2 = 0.9 y2 = 0.89
+Frame
+Frame done
+c14_nhits
+be7_nhits
+po210_nhits
+~~ Saving canvas to file test_plot.root
+Info in <TCanvas::Print>: pdf file test_plot.root.pdf has been created
 ```
