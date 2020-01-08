@@ -21,6 +21,7 @@ Info in <TCanvas::Print>: pdf file test_plot.root.pdf has been created
 ```
 Produces:
 
+![Plot image](https://github.com/sagitta42/myplotROOT/blob/master/test_plot/test_plot.png?raw=true)
 
 
 ## How to compile
