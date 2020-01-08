@@ -24,7 +24,7 @@ Produces:
 ![Plot image](https://github.com/sagitta42/myplotROOT/blob/master/test_plot/test_plot.png?raw=true)
 
 
-## How to compile
+## How to compile ```plot_test.C```
 
 Compile via 
 
@@ -61,7 +61,7 @@ int main(){
 (check out ```plot_test.C``` for more)
 
 
-## Reading histograms from file 
+### Reading histograms from file 
 
 Say you collect several histograms that you want to plot in one root file called ```test.root```
 
