@@ -168,7 +168,8 @@ void Myplot::DrawHistos(){
 	
         cout << histos[i]->GetName() << endl;
 
-		leg->AddEntry(histos[i], histos[i]->GetTitle());
+		leg->AddEntry(histos[i], histos[i]->GetName());
+//		leg->AddEntry(histos[i], histos[i]->GetTitle());
 	}
 
 	leg->Draw("same");

@@ -1,13 +1,33 @@
 # myplotROOT
 
-Class: myplot.C
+Class: ```myplot.C```
 
-Plotting example: plot_test.C
+Plotting example: ```plot_test.C```
+
+## Example
+
+```console
+$ ./plot_test test.root 
+~ Reading histograms from file test.root
+c14_nhits
+be7_nhits
+po210_nhits
+~ Drawing
+c14_nhits
+be7_nhits
+po210_nhits
+~ Saving canvas to file test_plot.root
+Info in <TCanvas::Print>: pdf file test_plot.root.pdf has been created
+```
+Produces:
+
+
+## How to compile
 
 Compile via 
 
 ```console
-g++ -Wall -O2 -o ${1%.*} $1 `root-config --cflags --glibs`;
+g++ -Wall -O2 -o plot_test plot_test.C `root-config --cflags --glibs`;
 ```
 
 Tip: add shortcut to ```.bashrc```
@@ -18,13 +38,15 @@ compileit(){
 }
 ```
 
-And use ```compileit plot_test.C``` to create ```./plot_test```
+And use ```compileit plot_test.C``` to create ```plot_test```
 
-## Example usage
+## How to use ```myplot.C``` 
 
-File ```plot_test.C```:
+### Use in a macro
 
 ```c++
+#include "myplot.C"
+
 int main(){
     Myplot* p = new Myplot("test.root", false, true); 
 
@@ -34,10 +56,10 @@ int main(){
     p->SaveCanvas("test_plot.root", true);
 }
 ```
+(check out ```plot_test.C``` for more)
 
-Go to the bottom for example output of running ```./plot_test```
 
-## Histograms in one ROOT files
+## Reading histograms from file 
 
 Say you collect several histograms that you want to plot in one root file called ```test.root```
 
@@ -67,7 +89,7 @@ E.g.
 Myplot* p = new Myplot("test.root", false, true);
 ```
 
-## Histograms in separate files
+### Adding histograms in separate files
 
 If you want to read the histograms from different files, you can initiate an empty plot
 
@@ -86,7 +108,7 @@ for( < loop over files ){
 }
 ```
 
-## Draw
+### Drawing
 
 To draw the histograms, do
 
@@ -105,7 +127,7 @@ p->SetLabels("x label", "y label");
 p->SetTitle("title");
 ```
 
-## Save plot
+### Saving the plot
 
 To save the plot, use the function ```p->SaveCanvas()```.
 
@@ -117,7 +139,7 @@ If you added histos manually from many files, or want a different name, you can 
 p->SaveCanvas("name.root", true);
 ```
 
-## Drawing lines
+### Drawing lines
 
 If you want to draw lines on the plot, you can do it via:
 
@@ -128,27 +150,3 @@ p->DrawLines();
 ```
 
 
-## Example
-
-1. Compile ```plot_test.C``` as described above
-
-2. Run ```./plot_test```
-
-```console
-$ ./plot_test 
-~~ Reading histograms from file test.root
-c14_nhits
-be7_nhits
-po210_nhits
-~~ Drawing
-XYrange
-10.5 370.5 0.1 0.0264498 
-x1 = 0.68 y1 = 0.71 x2 = 0.9 y2 = 0.89
-Frame
-Frame done
-c14_nhits
-be7_nhits
-po210_nhits
-~~ Saving canvas to file test_plot.root
-Info in <TCanvas::Print>: pdf file test_plot.root.pdf has been created
-```
